@@ -22,5 +22,7 @@ public interface ObjectLocators {
 	public static By objUserPage_UserNameLable = By.id("userDataLightBox_userNamePlaceholder");
 	public static By objDeleteUserButton = By.id("userDataLightBox_deleteBtn");
 	public static By objLogoutLink = By.id("logoutLink");
-	public static By objLoginPage_HeaderLabel = By.id("headerContainer");	
+	public static By objLoginPage_HeaderLabel = By.id("headerContainer");
+	public static By objExploreActitimeLink = By.xpath("//span[text()='Start exploring actiTIME']");
+	
 }

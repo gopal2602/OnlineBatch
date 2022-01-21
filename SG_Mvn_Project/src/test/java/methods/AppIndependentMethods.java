@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -128,6 +129,41 @@ public class AppIndependentMethods extends DriverScript{
 		}catch(Exception e)
 		{
 			reports.writeResult(oBrowser, "Exception", "Exception while executing 'clickObject()' method. "+e);
+			return false;
+		}
+		finally {
+			oEles = null;
+		}
+	}
+	
+	
+	
+	
+	/************************************************************
+	 * Method Name		: clickObjectJavaScript
+	 * purpose			: to click on the webelement
+	 * Parameters		: WebDriver oBrowser, By objBy
+	 * Return Type		: boolean
+	 **************************************************************/
+	public boolean clickObjectJavaScript(WebDriver oBrowser, By objBy)
+	{
+		List<WebElement> oEles = null;
+		JavascriptExecutor js = null;
+		try {
+			oEles = oBrowser.findElements(objBy);
+			js = (JavascriptExecutor) oBrowser;
+			if(oEles.size() > 0) {
+				js.executeScript("arguments[0].click();", oEles.get(0));
+				
+				reports.writeResult(oBrowser, "Pass", "The element '"+String.valueOf(objBy)+"' was clicked successful");
+				return true;
+			}else {
+				reports.writeResult(oBrowser, "Fail", "Failed to locate the element : '"+String.valueOf(objBy)+"'");
+				return false;
+			}
+		}catch(Exception e)
+		{
+			reports.writeResult(oBrowser, "Exception", "Exception while executing 'clickObjectJavaScript()' method. "+e);
 			return false;
 		}
 		finally {
@@ -515,5 +551,32 @@ public class AppIndependentMethods extends DriverScript{
 			content = null;
 			screenshots = null;
 		}
+	}
+	
+	
+	
+	/************************************************************
+	 * Method Name		: createAndReturnWebElement
+	 * purpose			: to create a webelement and return it
+	 * Parameters		: WebDriver oBrowser, By objBy
+	 * Return Type		: WebElement
+	 **************************************************************/
+	public WebElement createAndReturnWebElement(WebDriver oBrowser, By objBy)
+	{
+		WebElement objElement = null;
+		try {
+			objElement = oBrowser.findElement(objBy);
+			if(appInd.verifyElementPresent(oBrowser, objBy)) {
+				return objElement;
+			}else {
+				reports.writeResult(oBrowser, "Fail", "Failed to verify the presence of the element");
+				return null;
+			}
+		}catch(Exception e)
+		{
+			reports.writeResult(null, "Exception", "Exception in 'deleteContent()' method. "+ e);
+			return null;
+		}
+		
 	}
 }
