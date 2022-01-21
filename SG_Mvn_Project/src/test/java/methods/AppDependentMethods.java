@@ -1,6 +1,7 @@
 package methods;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.Assert;
 import driver.DriverScript;
 import locators.ObjectLocators;
@@ -39,14 +40,22 @@ public class AppDependentMethods extends DriverScript implements ObjectLocators{
 	 * Parameters		: WebDriver oBrowser, String strURL
 	 * Return Type		: boolean
 	 **************************************************************/
-	public boolean loginToApp(WebDriver oBrowser, String userName, String password)
+	public boolean loginToApp(WebDriver oBrowser, String userName, String password, String loginUserType)
 	{
+		Actions oAction = null;
 		try {
 			Assert.assertTrue(appInd.setObject(oBrowser, objUserNameEdit, userName));
 			Assert.assertTrue(appInd.setObject(oBrowser, objPasswordEdit, password));
 			Assert.assertTrue(appInd.clickObject(oBrowser, objLoginButton));
 			appInd.WaitForElement(oBrowser, objTimeTrackPageTitle, "Text", "Enter Time-Track", 10);
 			
+			if(loginUserType.equalsIgnoreCase("New")) {
+				appInd.WaitForElement(oBrowser, objExploreActitimeLink, "Clickable", "", 10);
+				oAction = new Actions(oBrowser);
+				oAction.moveToElement(appInd.createAndReturnWebElement(oBrowser, objExploreActitimeLink)).perform();
+				Thread.sleep(1000);
+				Assert.assertTrue(appInd.clickObjectJavaScript(oBrowser, objExploreActitimeLink));
+			}
 			
 			//Verify login is successful
 			Assert.assertTrue(appInd.verifyText(oBrowser, objTimeTrackPageTitle, "Text", "Enter Time-Track"));
